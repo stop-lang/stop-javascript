@@ -9,7 +9,7 @@ describe('Stop', function() {
         it('should create a stop instance based on an input string', function() {
         	let stopTestContent = `
 	start Hello {
-        string whom
+        string test
         -> Say
     }
     
@@ -17,8 +17,17 @@ describe('Stop', function() {
         string words
     }
         	`;
-        	let stopInstance = new stop.Stop(stopTestContent);
-        	expect(stopInstance).to.not.equal(undefined);
+        	expect(function(){
+        		new stop.Stop(stopTestContent);
+        	}).to.not.throw();
+        });
+        it('should throw an error', function() {
+        	let stopTestContent = `
+	start Hello {
+        	`;
+        	expect(function(){
+        		new stop.Stop(stopTestContent);
+        	}).to.throw();
         });
     });
 });

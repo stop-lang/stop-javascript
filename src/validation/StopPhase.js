@@ -90,7 +90,7 @@ StopPhase.prototype.exitTransition = function(ctx) {
     this.validateTransition(type);
 };
 StopPhase.prototype.exitEnqueue = function(ctx) {
-    var type = ctx.MODEL_TYPE().getText();
+    var type = ctx.model_type().getText();
     this.validateTransition(type);
 };
 StopPhase.prototype.getEnclosingScopeWithLine = function(scope){

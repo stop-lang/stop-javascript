@@ -7,6 +7,7 @@ const CollectionFieldSymbol = require("../symbols/CollectionFieldSymbol");
 const TransitionSymbol = require("../symbols/TransitionSymbol");
 const ThrowSymbol = require("../symbols/ThrowSymbol");
 const EnumSymbol = require("../symbols/EnumSymbol");
+const EnqueueSymbol = require("../symbols/EnqueueSymbol");
 const DynamicModelSymbol = require("../symbols/DynamicModelSymbol");
 
 var DefPhase = function(listener) {

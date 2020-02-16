@@ -6,6 +6,15 @@ const DefPhase = require("./validation/DefPhase");
 const RefPhase = require("./validation/RefPhase");
 const StopPhase = require("./validation/StopPhase");
 
+const ModelSymbol = require("./symbols/ModelSymbol");
+const EnumSymbol = require("./symbols/EnumSymbol");
+const StopFieldSymbol = require("./symbols/StopFieldSymbol");
+
+const StateType = require("./models/StateType");
+const State = require("./models/State");
+const Enumeration = require("./models/Enumeration");
+const Property = require("./models/Property");
+
 var AnnotatingErrorListener = function(annotations) {
     antlr4.error.ErrorListener.call(this);
     this.annotations = annotations;
@@ -28,6 +37,8 @@ function Stop(input){
     var tokens = new antlr4.CommonTokenStream(lexer);
     var parser = new StopParser.StopParser(tokens);
     var annotations = [];
+    this.states = {};
+    this.enumerations = {};
     
     var listener = new AnnotatingErrorListener(annotations);
     parser.removeErrorListeners();
@@ -47,8 +58,108 @@ function Stop(input){
     handleErrors(listener, stopPhase.errors);
 
     if (annotations.length > 0){
+        // for (var a in annotations){
+        //     console.log(annotations[a]);
+        // }
         throw Error("invalid file");
     }
+
+    for (var name in defPhase.globals.definitions){
+        var symbol = defPhase.globals.definitions[name];
+        if (symbol instanceof ModelSymbol){
+            var type = StateType.SYNC;
+            if (symbol.start){
+                type = StateType.START;
+            }else if (symbol.stop){
+                type = StateType.STOP;
+            } else if (symbol.queue){
+                type = StateType.QUEUE;
+            }
+            var state = new State(symbol.name, type);
+            this.states[symbol.name] = state;
+        }
+        if (symbol instanceof EnumSymbol){
+            var enumeration = new Enumeration(symbol.name, symbol.values);
+            this.enumerations[symbol.name] = enumeration;
+        }
+    }
+
+    for (var name in defPhase.globals.definitions){
+        var symbol = defPhase.globals.definitions[name];
+        if (symbol instanceof ModelSymbol){
+            var state = this.states[name];
+
+            if (!state){
+                throw Error("State " + name + " not found");
+            }
+
+            for (var i in symbol.transitions){
+                var transitionSymbol = symbol.transitions[i];
+                if (transitionSymbol){
+                    var transitionState = this.states[transitionSymbol.name];
+                    if (transitionState){
+                        state.transitions[transitionSymbol.name] = transitionState;
+                    }
+                }
+            }
+
+            for (var i in symbol.errors){
+                var errorSymbol = symbol.errors[i];
+                if (errorSymbol){
+                    var errorState = this.states[errorSymbol.name];
+                    if (errorState){
+                        state.errors[errorSymbol.name] = errorState;
+                    }
+                }
+            }
+
+            for (var i in symbol.enqueues){
+                var enqueueSymbol = symbol.enqueues[i];
+                if (enqueueSymbol){
+                    var enqueueState = this.states[enqueueSymbol.name];
+                    if (enqueueState){
+                        state.enqueues[enqueueSymbol.name] = enqueueState;
+                    }
+                }
+            }
+
+            if (symbol.returnSymbol != null){
+                state.returnType = symbol.returnSymbol.name;
+                state.returnCollection = symbol.returnSymbol.collection;
+                if (!symbol.returnSymbol.scalar){
+                    var returnState = this.states[symbol.returnSymbol.name];
+                    if (returnState){
+                        state.returnState = returnState;
+                    }else{
+                        throw Error("State " + name + " not found");
+                    }
+                }
+            }
+
+            for (var i in symbol.definitions){
+                var fieldSymbol = symbol.definitions[i];
+                if (fieldSymbol instanceof StopFieldSymbol){
+                    var property = new Property(fieldSymbol.name, fieldSymbol.typeName, fieldSymbol.collection, fieldSymbol.optional);
+                    
+                    if (fieldSymbol.dynamicSource != null){
+                        var providerState = this.states[fieldSymbol.dynamicSource.name];
+                        if (providerState){
+                            property.providerState = providerState;
+                            property.providerStateMapping = fieldSymbol.dynamicSource.sourceMapping;
+                        }else{
+                            throw Error("State " + fieldSymbol.dynamicSource.name + " not found");
+                        }
+                    }
+
+                    state.properties[property.name] = property;
+                    // console.log(property);
+                }
+            }
+        }
+    }
+
+    // console.log(this.states);
+    // console.log(this.enumerations);
 }
 
 function handleErrors(listener, errors){

@@ -1,6 +1,7 @@
-// Generated from ../stop/Stop.g4 by ANTLR 4.7.1
+// Generated from Stop.g4 by ANTLR 4.8
 // jshint ignore: start
 var antlr4 = require('antlr4/index');
+
 
 
 var serializedATN = ["\u0003\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964",
@@ -355,7 +356,6 @@ StopLexer.prototype.ruleNames = [ "T__0", "T__1", "T__2", "T__3", "T__4",
                                   "COMMENT", "LINE_COMMENT", "WS" ];
 
 StopLexer.prototype.grammarFileName = "Stop.g4";
-
 
 
 exports.StopLexer = StopLexer;

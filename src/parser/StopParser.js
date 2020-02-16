@@ -1,8 +1,9 @@
-// Generated from ../stop/Stop.g4 by ANTLR 4.7.1
+// Generated from Stop.g4 by ANTLR 4.8
 // jshint ignore: start
 var antlr4 = require('antlr4/index');
 var StopListener = require('./StopListener').StopListener;
 var grammarFileName = "Stop.g4";
+
 
 var serializedATN = ["\u0003\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964",
     "\u0003.\u00ff\u0004\u0002\t\u0002\u0004\u0003\t\u0003\u0004\u0004\t",
@@ -289,6 +290,7 @@ StopParser.RULE_throw_parameter = 24;
 StopParser.RULE_transition = 25;
 StopParser.RULE_enqueue = 26;
 
+
 function FileContext(parser, parent, invokingState) {
 	if(parent===undefined) {
 	    parent = null;
@@ -417,6 +419,7 @@ StopParser.prototype.file = function() {
     return localctx;
 };
 
+
 function PackageNameContext(parser, parent, invokingState) {
 	if(parent===undefined) {
 	    parent = null;
@@ -513,6 +516,7 @@ StopParser.prototype.packageName = function(_p) {
     return localctx;
 };
 
+
 function PackageDeclarationContext(parser, parent, invokingState) {
 	if(parent===undefined) {
 	    parent = null;
@@ -574,6 +578,7 @@ StopParser.prototype.packageDeclaration = function() {
     return localctx;
 };
 
+
 function IncludeContext(parser, parent, invokingState) {
 	if(parent===undefined) {
 	    parent = null;
@@ -634,6 +639,7 @@ StopParser.prototype.include = function() {
     }
     return localctx;
 };
+
 
 function ModelContext(parser, parent, invokingState) {
 	if(parent===undefined) {
@@ -821,6 +827,7 @@ StopParser.prototype.model = function() {
     return localctx;
 };
 
+
 function BlockContext(parser, parent, invokingState) {
 	if(parent===undefined) {
 	    parent = null;
@@ -907,6 +914,7 @@ StopParser.prototype.block = function() {
     }
     return localctx;
 };
+
 
 function StatementContext(parser, parent, invokingState) {
 	if(parent===undefined) {
@@ -1021,6 +1029,7 @@ StopParser.prototype.statement = function() {
     return localctx;
 };
 
+
 function Return_blockContext(parser, parent, invokingState) {
 	if(parent===undefined) {
 	    parent = null;
@@ -1107,6 +1116,7 @@ StopParser.prototype.return_block = function() {
     }
     return localctx;
 };
+
 
 function Return_block_statementContext(parser, parent, invokingState) {
 	if(parent===undefined) {
@@ -1203,6 +1213,7 @@ StopParser.prototype.return_block_statement = function() {
     return localctx;
 };
 
+
 function Scalar_typeContext(parser, parent, invokingState) {
 	if(parent===undefined) {
 	    parent = null;
@@ -1266,6 +1277,7 @@ StopParser.prototype.scalar_type = function() {
     }
     return localctx;
 };
+
 
 function Model_typeContext(parser, parent, invokingState) {
 	if(parent===undefined) {
@@ -1351,6 +1363,7 @@ StopParser.prototype.model_type = function() {
     return localctx;
 };
 
+
 function Enum_typeContext(parser, parent, invokingState) {
 	if(parent===undefined) {
 	    parent = null;
@@ -1410,6 +1423,7 @@ StopParser.prototype.enum_type = function() {
     return localctx;
 };
 
+
 function Enum_valueContext(parser, parent, invokingState) {
 	if(parent===undefined) {
 	    parent = null;
@@ -1468,6 +1482,7 @@ StopParser.prototype.enum_value = function() {
     }
     return localctx;
 };
+
 
 function EnumerationContext(parser, parent, invokingState) {
 	if(parent===undefined) {
@@ -1555,6 +1570,7 @@ StopParser.prototype.enumeration = function() {
     }
     return localctx;
 };
+
 
 function FieldContext(parser, parent, invokingState) {
 	if(parent===undefined) {
@@ -1682,6 +1698,7 @@ StopParser.prototype.field = function() {
     return localctx;
 };
 
+
 function Dynamic_sourceContext(parser, parent, invokingState) {
 	if(parent===undefined) {
 	    parent = null;
@@ -1759,6 +1776,7 @@ StopParser.prototype.dynamic_source = function() {
     }
     return localctx;
 };
+
 
 function Dynamic_source_mappingContext(parser, parent, invokingState) {
 	if(parent===undefined) {
@@ -1843,6 +1861,7 @@ StopParser.prototype.dynamic_source_mapping = function() {
     return localctx;
 };
 
+
 function Dynamic_source_mapping_parameterContext(parser, parent, invokingState) {
 	if(parent===undefined) {
 	    parent = null;
@@ -1909,6 +1928,7 @@ StopParser.prototype.dynamic_source_mapping_parameter = function() {
     }
     return localctx;
 };
+
 
 function ReferenceContext(parser, parent, invokingState) {
 	if(parent===undefined) {
@@ -2006,6 +2026,7 @@ StopParser.prototype.reference = function(_p) {
     return localctx;
 };
 
+
 function Dynamic_source_mapping_parameter_renameContext(parser, parent, invokingState) {
 	if(parent===undefined) {
 	    parent = null;
@@ -2064,6 +2085,7 @@ StopParser.prototype.dynamic_source_mapping_parameter_rename = function() {
     }
     return localctx;
 };
+
 
 function TypeContext(parser, parent, invokingState) {
 	if(parent===undefined) {
@@ -2157,6 +2179,7 @@ StopParser.prototype.type = function() {
     return localctx;
 };
 
+
 function CollectionContext(parser, parent, invokingState) {
 	if(parent===undefined) {
 	    parent = null;
@@ -2219,6 +2242,7 @@ StopParser.prototype.collection = function() {
     }
     return localctx;
 };
+
 
 function Return_typeContext(parser, parent, invokingState) {
 	if(parent===undefined) {
@@ -2313,6 +2337,7 @@ StopParser.prototype.return_type = function() {
     return localctx;
 };
 
+
 function Throw_typeContext(parser, parent, invokingState) {
 	if(parent===undefined) {
 	    parent = null;
@@ -2394,6 +2419,7 @@ StopParser.prototype.throw_type = function() {
     return localctx;
 };
 
+
 function Throw_parameterContext(parser, parent, invokingState) {
 	if(parent===undefined) {
 	    parent = null;
@@ -2452,6 +2478,7 @@ StopParser.prototype.throw_parameter = function() {
     }
     return localctx;
 };
+
 
 function TransitionContext(parser, parent, invokingState) {
 	if(parent===undefined) {
@@ -2517,6 +2544,7 @@ StopParser.prototype.transition = function() {
     }
     return localctx;
 };
+
 
 function EnqueueContext(parser, parent, invokingState) {
 	if(parent===undefined) {

@@ -108,7 +108,7 @@ RefPhase.prototype.exitTransition = function(ctx) {
     }
 };
 RefPhase.prototype.exitEnqueue = function(ctx) {
-    var type = ctx.MODEL_TYPE().getText();
+    var type = ctx.model_type().getText();
     if (!this.validateType(type)){
         this.reportError("Couldn't define enqueue because \""+
         type +"\" isn't defined");

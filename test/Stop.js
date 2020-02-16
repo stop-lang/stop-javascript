@@ -8,13 +8,27 @@ describe('Stop', function() {
     describe('instance', function() {
         it('should create a stop instance based on an input string', function() {
         	let stopTestContent = `
-	start Hello {
+	start Hello throws Error{
         string test
+        >> Queue
         -> Say
     }
     
     stop Say {
         string words
+    }
+
+    stop Error {
+        string message
+    }
+
+    queue Queue {
+        string message
+        -> Send
+    }
+
+    stop Send {
+        string message
     }
         	`;
         	expect(function(){

@@ -30,6 +30,48 @@ describe('References', function() {
         		new stop.Stop(stopTestContent);
         	}).to.not.throw();
         });
+        it('should validate return collection', function() {
+            let stopTestContent = `
+    start A {
+        string a1
+        -> C
+    }
+
+    B {
+        int64 b1
+    }
+
+    GetB <- B {
+        string b
+    }
+
+    D {
+        string e
+    }
+
+    GetD <- [D] {
+        string c1
+    }
+
+    F <- [string] {
+    }
+
+    G <- string {
+
+    }
+    
+    stop C {
+        string c1
+        B b <- GetB(b: c1)
+        [D] d <- GetD
+        [string] f <- F
+        string g <- G
+    }
+            `;
+            expect(function(){
+                new stop.Stop(stopTestContent);
+            }).to.not.throw();
+        });
         it('should not validate reference where types don\'t match', function() {
             let stopTestContent = `
     start A {

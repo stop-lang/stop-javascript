@@ -10,7 +10,15 @@ var State = function(name, stateType){
     this.returnType = null;
     this.returnState = null;
     this.returnCollection = false;
+
+    this.start = stateType == StateType.START;
+    this.stop = stateType == StateType.STOP;
+    this.queue = stateType == StateType.QUEUE;
 };
 State.prototype.constructor = State;
+
+State.prototype.getOrderedProperties = function() {
+	return this.properties;
+};
 
 module.exports = State;

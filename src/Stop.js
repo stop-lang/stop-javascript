@@ -14,6 +14,8 @@ const StateType = require("./models/StateType");
 const State = require("./models/State");
 const Enumeration = require("./models/Enumeration");
 const Property = require("./models/Property");
+const StateInstance = require("./models/StateInstance");
+const EnumerationInstance = require("./models/EnumerationInstance");
 
 var AnnotatingErrorListener = function(annotations) {
     antlr4.error.ErrorListener.call(this);
@@ -58,9 +60,6 @@ function Stop(input){
     handleErrors(listener, stopPhase.errors);
 
     if (annotations.length > 0){
-        // for (var a in annotations){
-        //     console.log(annotations[a]);
-        // }
         throw Error("invalid file");
     }
 
@@ -139,7 +138,22 @@ function Stop(input){
             for (var i in symbol.definitions){
                 var fieldSymbol = symbol.definitions[i];
                 if (fieldSymbol instanceof StopFieldSymbol){
-                    var property = new Property(fieldSymbol.name, fieldSymbol.typeName, fieldSymbol.collection, fieldSymbol.optional);
+                    var typeState = null;
+                    var type = null;
+                    if (!fieldSymbol.scalar){
+                        typeState = this.states[fieldSymbol.typeName];
+                        if (!typeState){
+                            typeState = this.enumerations[fieldSymbol.typeName];
+                            if (typeState){
+                                type = Property.PropertyType.ENUM;
+                            }
+                        }else{
+                            type = Property.PropertyType.STATE;
+                        }
+                    }else{
+                        type = Property.PropertyType[fieldSymbol.typeName.toUpperCase()];
+                    }
+                    var property = new Property(fieldSymbol.name, type, fieldSymbol.collection, fieldSymbol.optional, typeState);
                     
                     if (fieldSymbol.dynamicSource != null){
                         var providerState = this.states[fieldSymbol.dynamicSource.name];
@@ -152,14 +166,10 @@ function Stop(input){
                     }
 
                     state.properties[property.name] = property;
-                    // console.log(property);
                 }
             }
         }
     }
-
-    // console.log(this.states);
-    // console.log(this.enumerations);
 }
 
 function handleErrors(listener, errors){
@@ -173,5 +183,14 @@ function handleErrors(listener, errors){
         });
     }
 }
+
+Stop.models = {
+    'StateType': StateType,
+    'State': State,
+    'Enumeration': Enumeration,
+    'Property': Property,
+    'StateInstance': StateInstance,
+    'EnumerationInstance': EnumerationInstance
+};
 
 module.exports = Stop;

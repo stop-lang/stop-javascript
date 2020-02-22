@@ -25,6 +25,18 @@ Scope.prototype.define = function(symbol){
     }
     this.definitions[name] = symbol;
 };
+Scope.prototype.getNestedScopes = function(symbol){
+    var nestedScopes = [];
+
+    for (var name in this.definitions){
+        var value = this.definitions[name];
+        if (value instanceof Scope){
+            nestedScopes.push(value);
+        }
+    }
+
+    return nestedScopes;
+};
 Scope.prototype.getEnclosingScopeWithLine = function(scope){
     if (scope.line){
         return scope;

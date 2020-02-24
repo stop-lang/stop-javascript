@@ -13,6 +13,10 @@ Property.prototype.isStateProperty = function() {
     return this.type == Property.PropertyType.STATE;
 };
 
+Property.prototype.isEnumerationProperty = function() {
+    return this.type == Property.PropertyType.ENUM;
+};
+
 Property.PropertyType = {
 	DOUBLE: 0,
     FLOAT: 1,

@@ -146,6 +146,11 @@ function Stop(input){
                             typeState = this.enumerations[fieldSymbol.typeName];
                             if (typeState){
                                 type = Property.PropertyType.ENUM;
+                            }else{
+                                typeState = this.enumerations[state.name + '.' +fieldSymbol.typeName];
+                                if (typeState){
+                                    type = Property.PropertyType.ENUM;
+                                }
                             }
                         }else{
                             type = Property.PropertyType.STATE;

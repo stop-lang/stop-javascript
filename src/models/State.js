@@ -18,7 +18,20 @@ var State = function(name, stateType){
 State.prototype.constructor = State;
 
 State.prototype.getOrderedProperties = function() {
-	return this.properties;
+    var ordered = [];
+    for (var i in this.properties){
+        let property = this.properties[i];
+        if (!property.providerState){
+            ordered.push(property);
+        }
+    }
+    for (var i in this.properties){
+        let property = this.properties[i];
+        if (property.providerState){
+            ordered.push(property);
+        }
+    }
+    return ordered;
 };
 
 module.exports = State;

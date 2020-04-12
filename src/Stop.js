@@ -1,21 +1,4 @@
 const antlr4 = require("antlr4");
-const StopLexer = require("./parser/StopLexer");
-const StopParser = require("./parser/StopParser");
-
-const DefPhase = require("./validation/DefPhase");
-const RefPhase = require("./validation/RefPhase");
-const StopPhase = require("./validation/StopPhase");
-
-const ModelSymbol = require("./symbols/ModelSymbol");
-const EnumSymbol = require("./symbols/EnumSymbol");
-const StopFieldSymbol = require("./symbols/StopFieldSymbol");
-
-const StateType = require("./models/StateType");
-const State = require("./models/State");
-const Enumeration = require("./models/Enumeration");
-const Property = require("./models/Property");
-const StateInstance = require("./models/StateInstance");
-const EnumerationInstance = require("./models/EnumerationInstance");
 
 var AnnotatingErrorListener = function(annotations) {
     antlr4.error.ErrorListener.call(this);
@@ -60,6 +43,10 @@ function Stop(input){
     handleErrors(listener, stopPhase.errors);
 
     if (annotations.length > 0){
+        // for (var i in annotations){
+        //     let annotation = annotations[i];
+        //     console.log(annotation);
+        // }
         throw Error("invalid file");
     }
 
@@ -175,6 +162,8 @@ function Stop(input){
             }
         }
     }
+
+    return this;
 }
 
 function handleErrors(listener, errors){
@@ -189,13 +178,28 @@ function handleErrors(listener, errors){
     }
 }
 
-Stop.models = {
-    'StateType': StateType,
-    'State': State,
-    'Enumeration': Enumeration,
-    'Property': Property,
-    'StateInstance': StateInstance,
-    'EnumerationInstance': EnumerationInstance
-};
+const StopLexer = require("./parser/StopLexer");
+const StopParser = require("./parser/StopParser");
 
-module.exports = Stop;
+const DefPhase = require("./validation/DefPhase");
+const RefPhase = require("./validation/RefPhase");
+const StopPhase = require("./validation/StopPhase");
+
+const ModelSymbol = require("./symbols/ModelSymbol");
+const EnumSymbol = require("./symbols/EnumSymbol");
+const StopFieldSymbol = require("./symbols/StopFieldSymbol");
+
+const StateType = require("./models/StateType");
+const State = require("./models/State");
+const Enumeration = require("./models/Enumeration");
+const Property = require("./models/Property");
+const StateInstance = require("./models/StateInstance");
+const EnumerationInstance = require("./models/EnumerationInstance");
+
+module.exports.Stop = Stop;
+module.exports.StateType = StateType;
+module.exports.State = State;
+module.exports.Enumeration = Enumeration;
+module.exports.Property = Property;
+module.exports.StateInstance = StateInstance;
+module.exports.EnumerationInstance = EnumerationInstance;

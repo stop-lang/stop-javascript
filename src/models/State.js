@@ -1,5 +1,3 @@
-const StateType = require("./StateType");
-
 var State = function(name, stateType){
     this.name = name;
     this.type = stateType;
@@ -14,8 +12,8 @@ var State = function(name, stateType){
     this.start = stateType == StateType.START;
     this.stop = stateType == StateType.STOP;
     this.queue = stateType == StateType.QUEUE;
+    return this;
 };
-State.prototype.constructor = State;
 
 State.prototype.getOrderedProperties = function() {
     var ordered = [];
@@ -33,5 +31,7 @@ State.prototype.getOrderedProperties = function() {
     }
     return ordered;
 };
+
+const StateType = require("./StateType");
 
 module.exports = State;

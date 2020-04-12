@@ -1,14 +1,4 @@
 const StopListener = require("../parser/StopListener");
-const Scope = require("../symbols/Scope");
-const ModelSymbol = require("../symbols/ModelSymbol");
-const ModelFieldSymbol = require("../symbols/ModelFieldSymbol");
-const ScalarFieldSymbol = require("../symbols/ScalarFieldSymbol");
-const CollectionFieldSymbol = require("../symbols/CollectionFieldSymbol");
-const TransitionSymbol = require("../symbols/TransitionSymbol");
-const ThrowSymbol = require("../symbols/ThrowSymbol");
-const EnumSymbol = require("../symbols/EnumSymbol");
-const EnqueueSymbol = require("../symbols/EnqueueSymbol");
-const DynamicModelSymbol = require("../symbols/DynamicModelSymbol");
 
 var DefPhase = function(listener) {
     StopListener.StopListener.call(this); // inherit default listener
@@ -92,5 +82,16 @@ DefPhase.prototype.exitEnqueue = function(ctx) {
     var enqueueSymbol = new EnqueueSymbol(ctx, this.currentScope, this.packageName);
     this.currentScope.enqueues.push(enqueueSymbol);
 };
+
+const Scope = require("../symbols/Scope");
+const ModelSymbol = require("../symbols/ModelSymbol");
+const ModelFieldSymbol = require("../symbols/ModelFieldSymbol");
+const ScalarFieldSymbol = require("../symbols/ScalarFieldSymbol");
+const CollectionFieldSymbol = require("../symbols/CollectionFieldSymbol");
+const TransitionSymbol = require("../symbols/TransitionSymbol");
+const ThrowSymbol = require("../symbols/ThrowSymbol");
+const EnumSymbol = require("../symbols/EnumSymbol");
+const EnqueueSymbol = require("../symbols/EnqueueSymbol");
+const DynamicModelSymbol = require("../symbols/DynamicModelSymbol");
 
 module.exports = DefPhase;

@@ -1,8 +1,4 @@
 const StopListener = require("../parser/StopListener");
-const StopFieldSymbol = require("../symbols/StopFieldSymbol");
-const ReturnSymbol = require("../symbols/ReturnSymbol");
-const EnumSymbol = require("../symbols/EnumSymbol");
-const ModelFieldSymbol = require("../symbols/ModelFieldSymbol");
 
 var RefPhase = function(listener, globals, scopes) {
     StopListener.StopListener.call(this); // inherit default listener
@@ -151,5 +147,10 @@ RefPhase.prototype.getEnclosingScopeWithLine = function(scope){
     }
     return undefined;
 };
+
+const StopFieldSymbol = require("../symbols/StopFieldSymbol");
+const ReturnSymbol = require("../symbols/ReturnSymbol");
+const EnumSymbol = require("../symbols/EnumSymbol");
+const ModelFieldSymbol = require("../symbols/ModelFieldSymbol");
 
 module.exports = RefPhase;

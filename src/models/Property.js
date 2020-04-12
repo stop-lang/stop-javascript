@@ -6,8 +6,8 @@ var Property = function(name, type, collection, optional, state){
     this.providerState = null;
     this.providerStateMapping = null;
     this.state = state;
+    return this;
 };
-Property.prototype.constructor = Property;
 
 Property.prototype.isStateProperty = function() {
     return this.type == Property.PropertyType.STATE;

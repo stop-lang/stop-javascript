@@ -1,7 +1,3 @@
-const StopValidationException = require("../validation/StopValidationException");
-const EnumerationInstance = require("./EnumerationInstance");
-const Property = require("./Property");
-
 var StateInstance = function(state, properties){
     this.state = state;
     if (!properties){
@@ -9,9 +5,8 @@ var StateInstance = function(state, properties){
     }else{
     	this.properties = properties;
 	}
+    return this;
 };
-StateInstance.prototype.constructor = StateInstance;
-
 StateInstance.prototype.validateProperties = function(validateDynamicProperties){
 	if (validateDynamicProperties == undefined){
 		validateDynamicProperties = true;
@@ -44,10 +39,12 @@ StateInstance.prototype.validateProperties = function(validateDynamicProperties)
                     for (var i in valueList){
                     	var element = valueList[i];
                     	if (!validateValue(property, element)){
+                            console.log(property);
+                            console.log(element);
                             throw new StopValidationException("Invalid type "+element.type+" was expecting " +property.type+ " for collection element within " + key);
                         }
                         if ( property.isStateProperty() ){
-                            if (!(element instanceof StateInstance)){
+                            if (!isTypeOf(element, "StateInstance")){
                                 throw new StopValidationException("State property requires state instance");
                             }
 
@@ -61,7 +58,7 @@ StateInstance.prototype.validateProperties = function(validateDynamicProperties)
                             stateInstance.validateProperties();
                         }
                         if ( property.isEnumerationProperty() ){
-                            if (!(element instanceof EnumerationInstance)){
+                            if (!isTypeOf(element, "EnumerationInstance")){
                                 throw new StopValidationException("Enumeration property requires enumeration instance");
                             }
 
@@ -77,13 +74,13 @@ StateInstance.prototype.validateProperties = function(validateDynamicProperties)
                 }
             }else {
             	if (!validateValue(property, value)){
-                    if ( !((value instanceof EnumerationInstance) && (property.type == Property.PropertyType.STRING)) ){
+                    if ( !isTypeOf(value, "EnumerationInstance") && (property.type == Property.PropertyType.STRING)) {
                         throw new StopValidationException("Invalid value for " + key);
                     }
                 }
 
                 if ( property.isStateProperty() ){
-                    if (!(value instanceof StateInstance)){
+                    if (!isTypeOf(value, "StateInstance")){
                         throw new StopValidationException("State property requires state instance");
                     }
 
@@ -97,7 +94,7 @@ StateInstance.prototype.validateProperties = function(validateDynamicProperties)
                     stateInstance.validateProperties();
                 }
                 if ( property.isEnumerationProperty() ){
-                    if (!(value instanceof EnumerationInstance)){
+                    if (!isTypeOf(value, "EnumerationInstance")){
                         throw new StopValidationException("Enumeration property requires enumeration instance");
                     }
 
@@ -133,9 +130,9 @@ function validateValue(property, value) {
     	case Property.PropertyType.BOOL:
     		return isBoolean(value);
         case Property.PropertyType.STATE:
-            return (value instanceof StateInstance);
+            return isTypeOf(value, "StateInstance");
         case Property.PropertyType.ENUM:
-            return (value instanceof EnumerationInstance);
+            return isTypeOf(value, "EnumerationInstance");
         case Property.PropertyType.DOUBLE:
         case Property.PropertyType.FLOAT:
             return isFloat(value);
@@ -160,7 +157,8 @@ function validateValue(property, value) {
 };
 
 function isInt(n){
-    return Number(n) === n && n % 1 === 0;
+    let z= Number(n) === n && n % 1 === 0;
+    return z;
 }
 
 function isFloat(n){
@@ -174,5 +172,16 @@ function isString (value) {
 function isBoolean (value) {
 	return typeof value === 'boolean';
 }
+
+function isTypeOf(item, name){
+    if (item && item.constructor && (item.constructor.name==name)){
+        return true;
+    }
+    return false;
+}
+
+const StopValidationException = require("../validation/StopValidationException");
+const EnumerationInstance = require("./EnumerationInstance");
+const Property = require("./Property");
 
 module.exports = StateInstance;

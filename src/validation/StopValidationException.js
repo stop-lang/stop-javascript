@@ -1,6 +1,5 @@
-var StopValidationException = function(message){
-    this.message = message;
-};
-StopValidationException.prototype.constructor = StopValidationException;
-
-module.exports = StopValidationException;
+export default class StopValidationException {
+    constructor(message){
+        this.message = message;
+    }
+}

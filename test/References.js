@@ -1,8 +1,9 @@
 "use strict";
 
-var expect = require('chai').expect;
+import chai from 'chai';
+const expect = chai.expect;
 
-const stop = require('../src/index');
+import Stop from '../src/Stop.js';
 
 describe('References', function() {
     describe('basic', function() {
@@ -27,7 +28,7 @@ describe('References', function() {
     }
         	`;
         	expect(function(){
-        		new stop.Stop(stopTestContent);
+        		new Stop(stopTestContent);
         	}).to.not.throw();
         });
         it('should validate return collection', function() {
@@ -69,7 +70,7 @@ describe('References', function() {
     }
             `;
             expect(function(){
-                new stop.Stop(stopTestContent);
+                new Stop(stopTestContent);
             }).to.not.throw();
         });
         it('should not validate reference where types don\'t match', function() {
@@ -93,7 +94,7 @@ describe('References', function() {
     }
             `;
             expect(function(){
-                new stop.Stop(stopTestContent);
+                new Stop(stopTestContent);
             }).to.throw();
         });
         it('should validate nested references', function() {
@@ -129,7 +130,7 @@ describe('References', function() {
     }
             `;
             expect(function(){
-                new stop.Stop(stopTestContent);
+                new Stop(stopTestContent);
             }).to.not.throw();
         });
         it('should validate optional nested references', function() {
@@ -165,7 +166,7 @@ describe('References', function() {
     }
             `;
             expect(function(){
-                new stop.Stop(stopTestContent);
+                new Stop(stopTestContent);
             }).to.not.throw();
         });
         it('should not validate optional nested references', function() {
@@ -201,7 +202,7 @@ describe('References', function() {
     }
             `;
             expect(function(){
-                new stop.Stop(stopTestContent);
+                new Stop(stopTestContent);
             }).to.throw();
         });
         it('should not validate optional nested references', function() {
@@ -237,7 +238,7 @@ describe('References', function() {
     }
             `;
             expect(function(){
-                new stop.Stop(stopTestContent);
+                new Stop(stopTestContent);
             }).to.throw();
         });
         it('should not validate references where collection doesn\'t match', function() {
@@ -273,7 +274,7 @@ describe('References', function() {
     }
             `;
             expect(function(){
-                new stop.Stop(stopTestContent);
+                new Stop(stopTestContent);
             }).to.throw();
         });
     });

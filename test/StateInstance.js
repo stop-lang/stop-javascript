@@ -1,8 +1,10 @@
 "use strict";
 
-var expect = require('chai').expect;
+import chai from 'chai';
+const expect = chai.expect;
 
-const stop = require('../src/index');
+import Stop from '../src/Stop.js';
+import StateInstance from '../src/models/StateInstance.js';
 
 describe('StateInstance', function() {
     describe('instance', function() {
@@ -28,44 +30,44 @@ describe('StateInstance', function() {
         One one
     }
         	`;
-        	let stopInstance = new stop.Stop(stopTestContent);
-            let stateInstance = new stop.Stop.models.StateInstance(stopInstance.states["A"], {test: "test"})
+        	let stopInstance = new Stop(stopTestContent);
+            let stateInstance = new StateInstance(stopInstance.states["A"], {test: "test"})
         	expect(stateInstance.validateProperties()).to.equal(true);
 
             expect(function(){
-                let stateInstance2 = new stop.Stop.models.StateInstance(stopInstance.states["A"], {test: 4})
+                let stateInstance2 = new StateInstance(stopInstance.states["A"], {test: 4})
                 stateInstance2.validateProperties();
             }).to.throw();
 
             expect(function(){
-                let stateInstance3 = new stop.Stop.models.StateInstance(stopInstance.states["A"], {})
+                let stateInstance3 = new StateInstance(stopInstance.states["A"], {})
                 stateInstance3.validateProperties();
             }).to.throw();
 
             expect(function(){
-                let stateInstance3 = new stop.Stop.models.StateInstance(stopInstance.states["A"], {test: "test", number: "wrong"})
+                let stateInstance3 = new StateInstance(stopInstance.states["A"], {test: "test", number: "wrong"})
                 stateInstance3.validateProperties();
             }).to.throw();
 
             expect(function(){
-                let stateInstance4 = new stop.Stop.models.StateInstance(stopInstance.states["A"], {test: "test", number: 1})
+                let stateInstance4 = new StateInstance(stopInstance.states["A"], {test: "test", number: 1})
                 stateInstance4.validateProperties();
             }).to.not.throw();
 
             expect(function(){
-                let stateInstance5 = new stop.Stop.models.StateInstance(stopInstance.states["A"], {test: "test", number: 1.5})
+                let stateInstance5 = new StateInstance(stopInstance.states["A"], {test: "test", number: 1.5})
                 stateInstance5.validateProperties();
             }).to.throw();
 
             expect(function(){
-                let twoInstance = new stop.Stop.models.StateInstance(stopInstance.states["Two"], {three: "three"})
-                let stateInstance6 = new stop.Stop.models.StateInstance(stopInstance.states["A"], {test: "test", number: 1, two: twoInstance})
+                let twoInstance = new StateInstance(stopInstance.states["Two"], {three: "three"})
+                let stateInstance6 = new StateInstance(stopInstance.states["A"], {test: "test", number: 1, two: twoInstance})
                 stateInstance6.validateProperties();
             }).to.not.throw();
 
             expect(function(){
-                let twoInstance1 = new stop.Stop.models.StateInstance(stopInstance.states["Two"], {three: 3})
-                let stateInstance7 = new stop.Stop.models.StateInstance(stopInstance.states["A"], {test: "test", number: 1, two: twoInstance1})
+                let twoInstance1 = new StateInstance(stopInstance.states["Two"], {three: 3})
+                let stateInstance7 = new StateInstance(stopInstance.states["A"], {test: "test", number: 1, two: twoInstance1})
                 stateInstance7.validateProperties();
             }).to.throw();
         });

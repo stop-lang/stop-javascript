@@ -1,8 +1,9 @@
 "use strict";
 
-var expect = require('chai').expect;
+import chai from 'chai';
+const expect = chai.expect;
 
-const stop = require('../src/index');
+import Stop from '../src/Stop.js';
 
 describe('Stop', function() {
     describe('instance', function() {
@@ -32,7 +33,7 @@ describe('Stop', function() {
     }
         	`;
         	expect(function(){
-        		new stop.Stop(stopTestContent);
+        		new Stop(stopTestContent);
         	}).to.not.throw();
         });
         it('should throw an error', function() {
@@ -40,7 +41,7 @@ describe('Stop', function() {
 	start Hello {
         	`;
         	expect(function(){
-        		new stop.Stop(stopTestContent);
+        		new Stop(stopTestContent);
         	}).to.throw();
         });
     });

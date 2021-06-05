@@ -1,25 +1,23 @@
-const Scope = require("./Scope");
-const ReturnSymbol = require("./ReturnSymbol");
+import Scope from "./Scope.js";
+import ReturnSymbol from "./ReturnSymbol.js";
 
-var ModelSymbol = function(ctx, enclosingScope, defaultPackageName){
-    this.setNameWithPackage(ctx, ctx.MODEL_TYPE().getText(), defaultPackageName);
-    this.stop = ctx.STOP() != null;
-    this.start = ctx.START() != null;
-    this.queue = ctx.QUEUE() != null;
-    this.returnSymbol = undefined;
-    this.errors = [];
-    this.transitions = [];
-    this.enqueues = [];
-    this.timeout = 0;
-    this.line = ctx.start.line;
-    this.enclosingScope = enclosingScope;
-    this.definitions = {};
+export default class ModelSymbol extends Scope {
+    constructor(ctx, enclosingScope, defaultPackageName){
+        super(enclosingScope);
 
-    if (ctx.return_type()!=null){
-        this.returnSymbol = new ReturnSymbol(ctx.return_type(), enclosingScope, this.packageName);
+        this.setNameWithPackage(ctx, ctx.MODEL_TYPE().getText(), defaultPackageName);
+        this.stop = ctx.STOP() != null;
+        this.start = ctx.START() != null;
+        this.queue = ctx.QUEUE() != null;
+        this.returnSymbol = undefined;
+        this.errors = [];
+        this.transitions = [];
+        this.enqueues = [];
+        this.timeout = 0;
+        this.line = ctx.start.line;
+    
+        if (ctx.return_type()!=null){
+            this.returnSymbol = new ReturnSymbol(ctx.return_type(), enclosingScope, this.packageName);
+        }
     }
-};
-ModelSymbol.prototype = Object.create(Scope.prototype);
-ModelSymbol.prototype.constructor = ModelSymbol;
-
-module.exports = ModelSymbol;
+}

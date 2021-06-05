@@ -1,3 +1,5 @@
-const Stop = require("./Stop");
+"use strict";
 
-exports.Stop = Stop;
+import Stop from './Stop.js';
+
+export {Stop};

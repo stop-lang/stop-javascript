@@ -1,23 +1,24 @@
 {
   "name": "stop",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Stop Javascript",
   "main": "src/index.js",
   "scripts": {
-    "test": "nyc mocha ./test"
+    "test": "c8 mocha ./test"
   },
   "keywords": [
     "stop"
   ],
   "author": "Kyle Shank",
   "license": "MIT",
+  "type" : "module",
   "dependencies": {
-    "antlr4": "^4.8.0",
-    "nyc": "^15.0.0"
+    "antlr4": "^4.9.2",
+    "nyc": "^15.1.0"
   },
   "devDependencies": {
     "chai": "^4.2.0",
-    "mocha": "^7.0.0",
+    "mocha": "^8.4.0",
     "sinon": "^8.0.2"
   }
 }

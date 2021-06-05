@@ -1,8 +1,9 @@
 "use strict";
 
-var expect = require('chai').expect;
+import chai from 'chai';
+const expect = chai.expect;
 
-const stop = require('../src/index');
+import Stop from '../src/Stop.js';
 
 describe('Enumerations', function() {
     describe('instance', function() {
@@ -24,7 +25,7 @@ describe('Enumerations', function() {
     }
         	`;
         	expect(function(){
-        		new stop.Stop(stopTestContent);
+        		new Stop(stopTestContent);
         	}).to.not.throw();
         });
     });
@@ -47,7 +48,7 @@ describe('Enumerations', function() {
     }
             `;
             expect(function(){
-                let s = new stop.Stop(stopTestContent);
+                let s = new Stop(stopTestContent);
                 expect(s.enumerations.length, 1, 'enumerations should be 1');
                 expect(s.enumerations['Hello.Type']).to.exist;
                 expect(s.enumerations['Hello.Type'].name).to.equal('Hello.Type');

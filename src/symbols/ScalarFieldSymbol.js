@@ -1,11 +1,9 @@
-const StopFieldSymbol = require("./StopFieldSymbol");
+import StopFieldSymbol from "./StopFieldSymbol.js";
 
-var ScalarFieldSymbol = function(ctx, defaultPackageName){
-	var typeName = ctx.type().scalar_type().getText();
-	var scalar = true;
-    StopFieldSymbol.call(this, ctx, ctx.ID().getText(), typeName, scalar, defaultPackageName);
-};
-ScalarFieldSymbol.prototype = Object.create(StopFieldSymbol.prototype);
-ScalarFieldSymbol.prototype.constructor = ScalarFieldSymbol;
-
-module.exports = ScalarFieldSymbol;
+export default class ScalarFieldSymbol extends StopFieldSymbol {
+	constructor(ctx, defaultPackageName){
+		var typeName = ctx.type().scalar_type().getText();
+		var scalar = true;
+		super(ctx, ctx.ID().getText(), typeName, scalar, defaultPackageName);
+	}
+}

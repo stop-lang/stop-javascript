@@ -1,27 +1,25 @@
-const Scope = require("./Scope");
-const StopParser = require("../parser/StopParser");
+import Scope from "./Scope.js";
+import StopParser from "../parser/StopParser.js";
 
-var EnumSymbol = function(ctx, enclosingScope, defaultPackageName){
-    this.enclosingScope = enclosingScope;
-    this.values = [];
-    this.definitions = {};
-    this.canonical = false;
-    this.name = ctx.MODEL_TYPE().getText();
+export default class EnumSymbol extends Scope {
+    constructor(ctx, enclosingScope, defaultPackageName){
+        super(enclosingScope);
 
-    if (ctx.parentCtx.parentCtx instanceof StopParser.StopParser.FileContext) {
-        canonical = true;
-        var p = ctx.parentCtx.parentCtx.getChild(0);
-        if (p != null && (p instanceof StopParser.StopParser.PackageDeclarationContext)) {
-            var packageName = p.packageName().getText();
-            this.name = this.packageReference(this.packageName, this.name);
-        } else if (defaultPackageName!=null){
-            this.name = this.packageReference(defaultPackageName, this.name);
+        this.values = [];
+        this.canonical = false;
+        this.name = ctx.MODEL_TYPE().getText();
+    
+        if (ctx.parentCtx.parentCtx instanceof StopParser.FileContext) {
+            this.canonical = true;
+            var p = ctx.parentCtx.parentCtx.getChild(0);
+            if (p != null && (p instanceof StopParser.PackageDeclarationContext)) {
+                var packageName = p.packageName().getText();
+                this.name = this.packageReference(this.packageName, this.name);
+            } else if (defaultPackageName!=null){
+                this.name = this.packageReference(defaultPackageName, this.name);
+            }
+        }else{
+            this.name = this.modelReference(enclosingScope, this.name);
         }
-    }else{
-        this.name = this.modelReference(enclosingScope, this.name);
     }
-};
-EnumSymbol.prototype = Object.create(Scope.prototype);
-EnumSymbol.prototype.constructor = EnumSymbol;
-
-module.exports = EnumSymbol;
+}

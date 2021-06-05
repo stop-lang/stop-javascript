@@ -1,96 +1,94 @@
-const StopListener = require("../parser/StopListener");
-const Scope = require("../symbols/Scope");
-const ModelSymbol = require("../symbols/ModelSymbol");
-const ModelFieldSymbol = require("../symbols/ModelFieldSymbol");
-const ScalarFieldSymbol = require("../symbols/ScalarFieldSymbol");
-const CollectionFieldSymbol = require("../symbols/CollectionFieldSymbol");
-const TransitionSymbol = require("../symbols/TransitionSymbol");
-const ThrowSymbol = require("../symbols/ThrowSymbol");
-const EnumSymbol = require("../symbols/EnumSymbol");
-const EnqueueSymbol = require("../symbols/EnqueueSymbol");
-const DynamicModelSymbol = require("../symbols/DynamicModelSymbol");
+import StopListener from "../parser/StopListener.js";
+import Scope from "../symbols/Scope.js";
+import ModelSymbol from "../symbols/ModelSymbol.js";
+import ModelFieldSymbol from "../symbols/ModelFieldSymbol.js";
+import ScalarFieldSymbol from "../symbols/ScalarFieldSymbol.js";
+import CollectionFieldSymbol from "../symbols/CollectionFieldSymbol.js";
+import TransitionSymbol from "../symbols/TransitionSymbol.js";
+import ThrowSymbol from "../symbols/ThrowSymbol.js";
+import EnumSymbol from "../symbols/EnumSymbol.js";
+import EnqueueSymbol from "../symbols/EnqueueSymbol.js";
+import DynamicModelSymbol from "../symbols/DynamicModelSymbol.js";
 
-var DefPhase = function(listener) {
-    StopListener.StopListener.call(this); // inherit default listener
-    this.errors = [];
-    this.listener = listener;
-    this.globals = undefined;
-    this.scopes = [];
-    this.currentScope = undefined;
-    this.packageName = null;
-    return this;
-};
-DefPhase.prototype = Object.create(StopListener.StopListener.prototype);
-DefPhase.prototype.constructor = DefPhase;
-DefPhase.prototype.saveScope = function(ctx, s) { 
-    this.scopes[ctx] = s;
-};
-DefPhase.prototype.enterFile = function(ctx) { 
-    this.globals = new Scope();
-    this.currentScope = this.globals;
-};
-DefPhase.prototype.exitPackageDeclaration = function(ctx) {
-    this.packageName = ctx.packageName().getText();
-};
-DefPhase.prototype.enterModel = function(ctx) { 
-    if (ctx.MODEL_TYPE() == null){
-        return;
-    }  
-    var modelSymbol = new ModelSymbol(ctx, this.currentScope, this.packageName);
-    this.currentScope.define(modelSymbol);
-    this.saveScope(ctx, modelSymbol);
-    this.currentScope = modelSymbol;
-};
-DefPhase.prototype.exitModel = function(ctx) {
-    var modelSymbol = this.currentScope;
-    this.currentScope = modelSymbol.enclosingScope;
-};
-DefPhase.prototype.exitThrow_parameter = function(ctx) {
-    var modelSymbol = this.currentScope;
-    var throwSymbol = new ThrowSymbol(ctx, modelSymbol, this.packageName);
-    modelSymbol.errors.push(throwSymbol);
-};
-DefPhase.prototype.enterEnumeration = function(ctx) {
-    var enumSymbol = new EnumSymbol(ctx.enum_type(), this.currentScope, this.packageName);
-    this.currentScope.define(enumSymbol);
-    if (this.currentScope!=this.globals){
-        this.globals.define(enumSymbol);
+export default class DefPhase extends StopListener {
+    constructor(listener) {
+        super();
+        this.errors = [];
+        this.listener = listener;
+        this.globals = undefined;
+        this.scopes = [];
+        this.currentScope = undefined;
+        this.packageName = null;
     }
-    this.saveScope(ctx, enumSymbol);
-    this.currentScope = enumSymbol;
-};
-DefPhase.prototype.exitEnumeration = function(ctx) {
-    this.currentScope = this.currentScope.enclosingScope;
-};
-DefPhase.prototype.exitEnum_value = function(ctx) {
-    var enumValue = ctx.MODEL_TYPE().getText();
-    var enumSymbol = this.currentScope;
-    enumSymbol.values.push(enumValue);
-};
-DefPhase.prototype.exitField = function(ctx) {
-    var field = null;
-    if (ctx.type() != null && ctx.type().model_type() != null) {
-        field = new ModelFieldSymbol(ctx, this.packageName);
-    }else if (ctx.type()!=null && ctx.type().scalar_type() != null){
-        field = new ScalarFieldSymbol(ctx, this.packageName);
-    }else if (ctx.collection() != null && ctx.collection().type() != null){
-        field = new CollectionFieldSymbol(ctx, this.packageName);
+
+    saveScope(ctx, s) { 
+        this.scopes[ctx] = s;
     }
-    if(field != null){
-        if (ctx.dynamic_source() != null){
-            field.dynamicSource = new DynamicModelSymbol(ctx.dynamic_source(), this.currentScope, this.packageName);
+    enterFile(ctx) { 
+        this.globals = new Scope();
+        this.currentScope = this.globals;
+    }
+    exitPackageDeclaration(ctx) {
+        this.packageName = ctx.packageName().getText();
+    }
+    enterModel(ctx) { 
+        if (ctx.MODEL_TYPE() == null){
+            return;
+        }  
+        var modelSymbol = new ModelSymbol(ctx, this.currentScope, this.packageName);
+        this.currentScope.define(modelSymbol);
+        this.saveScope(ctx, modelSymbol);
+        this.currentScope = modelSymbol;
+    };
+    exitModel(ctx) {
+        var modelSymbol = this.currentScope;
+        this.currentScope = modelSymbol.enclosingScope;
+    };
+    exitThrow_parameter(ctx) {
+        var modelSymbol = this.currentScope;
+        var throwSymbol = new ThrowSymbol(ctx, modelSymbol, this.packageName);
+        modelSymbol.errors.push(throwSymbol);
+    };
+    enterEnumeration(ctx) {
+        var enumSymbol = new EnumSymbol(ctx.enum_type(), this.currentScope, this.packageName);
+        this.currentScope.define(enumSymbol);
+        if (this.currentScope!=this.globals){
+            this.globals.define(enumSymbol);
         }
-        field.optional = ctx.OPTIONAL() != null;
-        this.currentScope.define(field);
-    }
-};
-DefPhase.prototype.exitTransition = function(ctx) {
-    var transitionSymbol = new TransitionSymbol(ctx, this.currentScope, this.packageName);
-    this.currentScope.transitions.push(transitionSymbol);
-};
-DefPhase.prototype.exitEnqueue = function(ctx) {
-    var enqueueSymbol = new EnqueueSymbol(ctx, this.currentScope, this.packageName);
-    this.currentScope.enqueues.push(enqueueSymbol);
-};
-
-module.exports = DefPhase;
+        this.saveScope(ctx, enumSymbol);
+        this.currentScope = enumSymbol;
+    };
+    exitEnumeration(ctx) {
+        this.currentScope = this.currentScope.enclosingScope;
+    };
+    exitEnum_value(ctx) {
+        var enumValue = ctx.MODEL_TYPE().getText();
+        var enumSymbol = this.currentScope;
+        enumSymbol.values.push(enumValue);
+    };
+    exitField(ctx) {
+        var field = null;
+        if (ctx.type() != null && ctx.type().model_type() != null) {
+            field = new ModelFieldSymbol(ctx, this.packageName);
+        }else if (ctx.type()!=null && ctx.type().scalar_type() != null){
+            field = new ScalarFieldSymbol(ctx, this.packageName);
+        }else if (ctx.collection() != null && ctx.collection().type() != null){
+            field = new CollectionFieldSymbol(ctx, this.packageName);
+        }
+        if(field != null){
+            if (ctx.dynamic_source() != null){
+                field.dynamicSource = new DynamicModelSymbol(ctx.dynamic_source(), this.currentScope, this.packageName);
+            }
+            field.optional = ctx.OPTIONAL() != null;
+            this.currentScope.define(field);
+        }
+    };
+    exitTransition(ctx) {
+        var transitionSymbol = new TransitionSymbol(ctx, this.currentScope, this.packageName);
+        this.currentScope.transitions.push(transitionSymbol);
+    };
+    exitEnqueue(ctx) {
+        var enqueueSymbol = new EnqueueSymbol(ctx, this.currentScope, this.packageName);
+        this.currentScope.enqueues.push(enqueueSymbol);
+    };
+}

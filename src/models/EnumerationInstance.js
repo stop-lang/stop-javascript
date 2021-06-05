@@ -1,7 +1,6 @@
-var EnumerationInstance = function(enumeration, value){
-    this.enumeration = enumeration;
-    this.value = value;
-};
-EnumerationInstance.prototype.constructor = EnumerationInstance;
-
-module.exports = EnumerationInstance;
+export default class EnumerationInstance {
+    constructor(enumeration, value){
+        this.enumeration = enumeration;
+        this.value = value;
+    }
+}

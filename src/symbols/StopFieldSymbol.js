@@ -12,6 +12,15 @@ export default class StopFieldSymbol extends Scope {
         this.optional = false;
         this.collection = false;
         this.dynamicSource = null;
+        this.annotation = false;
+
+        if (ctx.type()!=null && ctx.type().model_annotation()!=null){
+            this.typeName = ctx.type().model_annotation().model_type().getText();
+            this.annotation = true;
+        }else if (ctx.collection()!=null && ctx.collection().type()!=null && ctx.collection().type().model_annotation()!=null){
+            this.annotation = true;
+            this.typeName = ctx.collection().type().model_annotation().model_type().getText();
+        }
     
         if (!this.isReference(name) && !scalar){
             if (ctx.parentCtx != null){

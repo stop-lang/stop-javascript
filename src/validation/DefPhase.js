@@ -68,7 +68,7 @@ export default class DefPhase extends StopListener {
     };
     exitField(ctx) {
         var field = null;
-        if (ctx.type() != null && ctx.type().model_type() != null) {
+        if (ctx.type() != null && ((ctx.type().model_type() != null) || (ctx.type().model_annotation()!=null))) {
             field = new ModelFieldSymbol(ctx, this.packageName);
         }else if (ctx.type()!=null && ctx.type().scalar_type() != null){
             field = new ScalarFieldSymbol(ctx, this.packageName);

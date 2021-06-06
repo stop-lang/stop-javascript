@@ -97,7 +97,7 @@ export default class StateInstance {
                         throw new StopValidationException("Collection must be defined");
                     }else {
                         var valueList = value;
-                        for (var i in valueList){
+                        for (var i = 0; i < valueList.length; i++){
                             var element = valueList[i];
                             if (!this.validateValue(property, element)){
                                 throw new StopValidationException("Invalid type "+element.type+" was expecting " +property.type+ " for collection element within " + key);
@@ -110,7 +110,11 @@ export default class StateInstance {
                                 var stateInstance = element;
                                 var stateProperty = property;
     
-                                if ( stateProperty.state.name != stateInstance.state.name ){
+                                if (stateProperty.annotation){
+                                    if ( !stateProperty.state.equals(stateInstance.state) && !stateInstance.state.hasInheritedState(stateProperty.state)){
+                                        throw new StopValidationException("State instance " + stateInstance.state.name + " doesn't match annotated state property " + stateProperty.state.name);
+                                    }
+                                }else if ( stateProperty.state.name != stateInstance.state.name ){
                                     throw new StopValidationException("State instance " + stateInstance.state.name + " doesn't match property " + stateProperty.state.name);
                                 }
     
@@ -146,7 +150,11 @@ export default class StateInstance {
                         var stateInstance = value;
                         var stateProperty = property;
     
-                        if ( stateProperty.state.name != stateInstance.state.name ){
+                        if (stateProperty.annotation){
+                            if ( !stateProperty.state.equals(stateInstance.state) && !stateInstance.state.hasInheritedState(stateProperty.state)){
+                                throw new StopValidationException("State instance " + stateInstance.state.name + " doesn't match annotated state property " + stateProperty.state.name);
+                            }
+                        }else if ( stateProperty.state.name != stateInstance.state.name ){
                             throw new StopValidationException("State instance " + stateInstance.state.name + " doesn't match property " + stateProperty.state.name);
                         }
     

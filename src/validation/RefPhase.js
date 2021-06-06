@@ -3,6 +3,7 @@ import StopFieldSymbol from "../symbols/StopFieldSymbol.js";
 import ReturnSymbol from "../symbols/ReturnSymbol.js";
 import EnumSymbol from "../symbols/EnumSymbol.js";
 import ModelFieldSymbol from "../symbols/ModelFieldSymbol.js";
+import ModelSymbol from "../symbols/ModelSymbol.js";
 
 export default class RefPhase extends StopListener {
     constructor(listener, globals, scopes) {
@@ -23,6 +24,16 @@ export default class RefPhase extends StopListener {
     }
     enterModel(ctx) {
         this.currentScope = this.globals.definitions[ctx.MODEL_TYPE().getText()];
+        if (this.currentScope instanceof ModelSymbol){
+            let modelSymbol = this.currentScope;
+            for (var modelAnnotationName in modelSymbol.getModelAnnotations()){
+                let foundModelSymbol = this.globals.definitions[modelAnnotationName];
+                if (!foundModelSymbol) {
+                    this.reportError("Couldn't define annotations for \""+
+                            modelSymbol.name +"\" because " + modelAnnotationName + " isn't defined");
+                }
+            }
+        }
     }
     exitModel(ctx) {
         this.currentScope = this.currentScope.enclosingScope;

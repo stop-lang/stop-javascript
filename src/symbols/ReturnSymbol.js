@@ -8,32 +8,59 @@ export default class ReturnSymbol extends Scope {
     
         this.scalar = false;
         this.packageName = defaultPackageName;
-        this.collection = ctx.collection() != null;
+        this.collection = ctx.return_type().collection() != null;
+        this.annotation = false;
     
         var name = null;
-        
-        if (ctx.collection() != null) {
-            this.scalar = ctx.collection().type().getText() == ctx.collection().type().getText().toLowerCase();
-            name = ctx.collection().type().getText();
-            if (!this.scalar){
-                if (!this.isReference(name)) {
-                    if (this.packageName != null) {
-                        name = this.packageReference(packageName, name);
+
+        if (ctx.return_type().collection() != null) {
+            if (ctx.return_type().collection().type() != null) {
+                if (ctx.return_type().collection().type().model_annotation()!=null) {
+                    name = ctx.return_type().collection().type().model_annotation().model_type().getText();
+                    this.annotation = true;
+                    if (!this.isReference(name)) {
+                        if (this.packageName != null) {
+                            name = this.packageName + "." + name;
+                        }
                     }
+                }else if (ctx.return_type().collection().type().model_type()!=null) {
+                    name = ctx.return_type().collection().type().getText();
+                    if (!this.isReference(name)) {
+                        if (this.packageName != null) {
+                            name = this.packageName + "." + name;
+                        }
+                    }
+                }else{
+                    this.scalar = true;
+                    name = ctx.return_type().collection().type().scalar_type().getText();
                 }
             }
-        }else if(ctx.type() != null){
-            this.scalar = ctx.type().getText() == ctx.type().getText().toLowerCase();
-            name = ctx.type().getText();
-            if (!this.scalar){
+        }else if(ctx.return_type().type() != null){
+            if (ctx.return_type().type().model_annotation()!=null) {
+                name = ctx.return_type().type().model_annotation().model_type().getText();
+                this.annotation = true;
                 if (!this.isReference(name)) {
                     if (this.packageName != null) {
-                        name = this.packageReference(packageName, name);
+                        name = this.packageName + "." + name;
                     }
                 }
+            }else if (ctx.return_type().type().model_type()!=null) {
+                name = ctx.return_type().type().getText();
+                if (!this.isReference(name)) {
+                    if (this.packageName != null) {
+                        name = this.packageName + "." + name;
+                    }
+                }
+            }else{
+                this.scalar = true;
+                name = ctx.return_type().type().scalar_type().getText();
             }
         }
     
         this.name = name;
+    }
+
+    isReference(name){
+        return name.indexOf(".") >= 0;
     }
 }

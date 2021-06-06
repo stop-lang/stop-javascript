@@ -15,6 +15,9 @@ import State from "./models/State.js";
 import Enumeration from "./models/Enumeration.js";
 import Property from "./models/Property.js";
 
+import StopValidationException from "./validation/StopValidationException.js";
+import StateTransition from "./models/StateTransition.js";
+
 class AnnotatingErrorListener extends antlr4.error.ErrorListener {
     constructor(annotations){
         super();
@@ -96,7 +99,7 @@ export default class Stop {
                     if (transitionSymbol){
                         var transitionState = this.states[transitionSymbol.name];
                         if (transitionState){
-                            state.transitions[transitionSymbol.name] = transitionState;
+                            state.transitions[transitionSymbol.name] = new StateTransition(transitionState, transitionSymbol.annotation);
                         }
                     }
                 }
@@ -106,7 +109,7 @@ export default class Stop {
                     if (errorSymbol){
                         var errorState = this.states[errorSymbol.name];
                         if (errorState){
-                            state.errors[errorSymbol.name] = errorState;
+                            state.errors[errorSymbol.name] = new StateTransition(errorState, errorSymbol.annotation);
                         }
                     }
                 }
@@ -116,7 +119,7 @@ export default class Stop {
                     if (enqueueSymbol){
                         var enqueueState = this.states[enqueueSymbol.name];
                         if (enqueueState){
-                            state.enqueues[enqueueSymbol.name] = enqueueState;
+                            state.enqueues[enqueueSymbol.name] = new StateTransition(enqueueState, enqueueSymbol.annotation);
                         }
                     }
                 }
@@ -128,6 +131,7 @@ export default class Stop {
                         var returnState = this.states[symbol.returnSymbol.name];
                         if (returnState){
                             state.returnState = returnState;
+                            state.returnAnnotation = symbol.returnSymbol.annotation;
                         }else{
                             throw Error("State " + name + " not found");
                         }
@@ -157,7 +161,7 @@ export default class Stop {
                         }else{
                             type = Property.Type[fieldSymbol.typeName.toUpperCase()];
                         }
-                        var property = new Property(fieldSymbol.name, type, fieldSymbol.collection, fieldSymbol.optional, typeState);
+                        var property = new Property(fieldSymbol.name, type, fieldSymbol.collection, fieldSymbol.optional, typeState, fieldSymbol.annotation);
                         
                         if (fieldSymbol.dynamicSource != null){
                             var providerState = this.states[fieldSymbol.dynamicSource.name];
@@ -173,6 +177,42 @@ export default class Stop {
                     }
                 }
             }
+        }
+
+        for (var name in defPhase.globals.definitions){
+            var symbol = defPhase.globals.definitions[name];
+            if (symbol instanceof ModelSymbol){
+                let name = symbol.name;
+                var modelState = this.states[name];
+
+                if (!modelState) {
+                    throw new StopValidationException("model " + name + " not found");
+                }
+
+                for (var modelAnnotationName in symbol.getModelAnnotations()) {
+                    let inheritState = this.states[modelAnnotationName];
+                    if (!inheritState) {
+                        throw new StopValidationException("inherited model " + modelAnnotationName + " not found");
+                    }
+                    let modelAnnotation = symbol.getModelAnnotations()[modelAnnotationName];
+                    let stateAnnotation = new StateAnnotation(inheritState, modelAnnotation);
+                    modelState.addAnnotation(stateAnnotation);
+                }
+
+                for (var i = 0; i < symbol.getAnnotations().length; i++){
+                    let annotation = symbol.getAnnotations()[i];
+                    modelState.addAnnotation(annotation);
+                }
+            }
+        }
+
+        this.validateStateProperties();
+    }
+
+    validateStateProperties(){
+        for (var stateName in this.states){
+            let state = this.states[stateName];
+            // TODO
         }
     }
 

@@ -20,7 +20,7 @@ export default class Property {
         ENUM: 17
     };
     
-    constructor(name, type, collection, optional, state){
+    constructor(name, type, collection, optional, state, annotation){
         this.name = name;
         this.type = type;
         this.collection = collection;
@@ -28,6 +28,7 @@ export default class Property {
         this.providerState = null;
         this.providerStateMapping = null;
         this.state = state;
+        this.annotation = annotation;
     }
 
     isStateProperty() {
@@ -36,5 +37,12 @@ export default class Property {
     
     isEnumerationProperty() {
         return this.type == Property.Type.ENUM;
+    }
+
+    canInherit(otherProperty){
+        return (otherProperty.name == this.name)
+                && (otherProperty.type == this.type)
+                && ( !this.optional || (otherProperty.optional == this.optional))
+                && (otherProperty.collection == this.collection);
     }
 }

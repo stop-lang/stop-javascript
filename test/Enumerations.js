@@ -1,6 +1,7 @@
 "use strict";
 
 import chai from 'chai';
+import EnumerationInstance from '../src/models/EnumerationInstance.js';
 const expect = chai.expect;
 
 import Stop from '../src/Stop.js';
@@ -52,6 +53,7 @@ describe('Enumerations', function() {
                 expect(s.enumerations.length, 1, 'enumerations should be 1');
                 expect(s.enumerations['Hello.Type']).to.exist;
                 expect(s.enumerations['Hello.Type'].name).to.equal('Hello.Type');
+                let i = new EnumerationInstance(s.enumerations['Hello.Type'], 'ONE')
             }).to.not.throw();
         });
     });

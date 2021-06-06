@@ -5,6 +5,7 @@ const expect = chai.expect;
 
 import Stop from '../src/Stop.js';
 import StateInstance from '../src/models/StateInstance.js';
+import EnumerationInstance from '../src/models/EnumerationInstance.js';
 
 describe('StateInstance', function() {
     describe('instance', function() {
@@ -17,12 +18,19 @@ describe('StateInstance', function() {
         -> B
     }
     
+    enum Type {
+        ALPHA
+        BETA
+        GAMMA
+    }
+
     One {
         string alpha
         optional string beta
     }
 
     Two {
+        Type type
         string three
     }
 
@@ -60,15 +68,22 @@ describe('StateInstance', function() {
             }).to.throw();
 
             expect(function(){
-                let twoInstance = new StateInstance(stopInstance.states["Two"], {three: "three"})
+                let enumInstance = new EnumerationInstance(stopInstance.enumerations['Type'], "BETA")
+                let twoInstance = new StateInstance(stopInstance.states["Two"], {three: "three", type: enumInstance})
                 let stateInstance6 = new StateInstance(stopInstance.states["A"], {test: "test", number: 1, two: twoInstance})
                 stateInstance6.validateProperties();
             }).to.not.throw();
 
             expect(function(){
-                let twoInstance1 = new StateInstance(stopInstance.states["Two"], {three: 3})
+                let enumInstance = new EnumerationInstance(stopInstance.enumerations['Type'], "BETA")
+                let twoInstance1 = new StateInstance(stopInstance.states["Two"], {three: 3, type: enumInstance})
                 let stateInstance7 = new StateInstance(stopInstance.states["A"], {test: "test", number: 1, two: twoInstance1})
                 stateInstance7.validateProperties();
+            }).to.throw();
+
+            expect(function(){
+                let twoInstance1 = new StateInstance(stopInstance.states["Two"], {three: 3, type: 333})
+                twoInstance1.validateProperties();
             }).to.throw();
         });
     });

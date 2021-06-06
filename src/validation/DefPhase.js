@@ -9,6 +9,7 @@ import ThrowSymbol from "../symbols/ThrowSymbol.js";
 import EnumSymbol from "../symbols/EnumSymbol.js";
 import EnqueueSymbol from "../symbols/EnqueueSymbol.js";
 import DynamicModelSymbol from "../symbols/DynamicModelSymbol.js";
+import ValidationSymbol from "../symbols/ValidationSymbol.js";
 
 export default class DefPhase extends StopListener {
     constructor(listener) {
@@ -80,6 +81,18 @@ export default class DefPhase extends StopListener {
                 field.dynamicSource = new DynamicModelSymbol(ctx.dynamic_source(), this.currentScope, this.packageName);
             }
             field.optional = ctx.OPTIONAL() != null;
+            if (ctx.validation_block()!=null){
+                for (var i = 0; i < ctx.validation_block().validation_statement().length; i++){
+                    let statementContext = ctx.validation_block().validation_statement()[i];
+                    var name;
+                    if (statementContext.state_validation()!=null){
+                        name = "state";
+                    }else{
+                        name = statementContext.validation().ID().getText();
+                    }
+                    field.addValidation(new ValidationSymbol(name, statementContext, this.packageName));
+                }
+            }
             this.currentScope.define(field);
         }
     };

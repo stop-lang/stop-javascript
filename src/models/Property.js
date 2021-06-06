@@ -20,7 +20,7 @@ export default class Property {
         ENUM: 17
     };
     
-    constructor(name, type, collection, optional, state, annotation){
+    constructor(name, type, collection, optional, state, annotation, validations){
         this.name = name;
         this.type = type;
         this.collection = collection;
@@ -29,6 +29,7 @@ export default class Property {
         this.providerStateMapping = null;
         this.state = state;
         this.annotation = annotation;
+        this.validations = validations;
     }
 
     isStateProperty() {

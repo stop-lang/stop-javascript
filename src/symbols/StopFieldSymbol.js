@@ -13,6 +13,7 @@ export default class StopFieldSymbol extends Scope {
         this.collection = false;
         this.dynamicSource = null;
         this.annotation = false;
+        this.validations = {};
 
         if (ctx.type()!=null && ctx.type().model_annotation()!=null){
             this.typeName = ctx.type().model_annotation().model_type().getText();
@@ -34,5 +35,9 @@ export default class StopFieldSymbol extends Scope {
                 this.typeName = this.packageReference(this.packageName, this.typeName);
             }
         }
+    }
+
+    addValidation(validationSymbol){
+        this.validations[validationSymbol.name] = validationSymbol;
     }
 }

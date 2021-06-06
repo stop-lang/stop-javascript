@@ -17,6 +17,9 @@ import Property from "./models/Property.js";
 
 import StopValidationException from "./validation/StopValidationException.js";
 import StateTransition from "./models/StateTransition.js";
+import StateAnnotation from "./models/StateAnnotation.js";
+import PropertyValidation from "./models/PropertyValidation.js";
+import StatePropertyValidation from "./models/StatePropertyValidation.js";
 
 class AnnotatingErrorListener extends antlr4.error.ErrorListener {
     constructor(annotations){
@@ -161,7 +164,31 @@ export default class Stop {
                         }else{
                             type = Property.Type[fieldSymbol.typeName.toUpperCase()];
                         }
-                        var property = new Property(fieldSymbol.name, type, fieldSymbol.collection, fieldSymbol.optional, typeState, fieldSymbol.annotation);
+
+                        var validations = [];
+                        for (var validationSymbolName in fieldSymbol.validations){
+                            let validationSymbol = fieldSymbol.validations[validationSymbolName];
+                            if (validationSymbol.name == "state"){
+                                var kind = validationSymbol.parameters["kind"];
+                                if (kind==null){
+                                    throw new StopValidationException("state validation parameter kind not found");
+                                }
+                                var annotated = false;
+                                if (kind[0]=="@"){
+                                    annotated=true;
+                                    kind = kind.substring(1);
+                                }
+                                var kindState = this.states[kind];
+                                if (kindState == null){
+                                    throw new StopValidationException("state validation parameter kind state not found");
+                                }
+                                validations.push(new StatePropertyValidation(kindState, annotated));
+                            }else{
+                                validations.push(new PropertyValidation(validationSymbol.name, validationSymbol.parameters));
+                            }
+                        }
+
+                        var property = new Property(fieldSymbol.name, type, fieldSymbol.collection, fieldSymbol.optional, typeState, fieldSymbol.annotation, validations);
                         
                         if (fieldSymbol.dynamicSource != null){
                             var providerState = this.states[fieldSymbol.dynamicSource.name];

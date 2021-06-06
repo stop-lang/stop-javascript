@@ -1,5 +1,6 @@
 import Scope from "./Scope.js";
 import ReturnSymbol from "./ReturnSymbol.js";
+import Annotation from "../models/Annotation.js";
 
 export default class ModelSymbol extends Scope {
     constructor(ctx, enclosingScope, defaultPackageName){
@@ -28,8 +29,8 @@ export default class ModelSymbol extends Scope {
             let annotationContext = this.annotations[i];
             if (annotationContext.annotation_type().model_type()!=null){
                 let annotationName = annotationContext.annotation_type().model_type().getText();
-                if (!annotationName.contains(".") && (packageName!=null)){
-                    annotationName = packageName + "." + annotationName;
+                if ((annotationName.indexOf(".")<0) && this.packageName){
+                    annotationName = this.packageName + "." + annotationName;
                 }
                 var params = {};
                 if (annotationContext.annotation_parameters()!=null){

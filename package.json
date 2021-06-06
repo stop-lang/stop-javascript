@@ -4,7 +4,7 @@
   "description": "Stop Javascript",
   "main": "src/index.js",
   "scripts": {
-    "test": "c8 mocha ./test"
+    "test": "c8 --exclude src/parser --exclude test mocha ./test"
   },
   "keywords": [
     "stop"

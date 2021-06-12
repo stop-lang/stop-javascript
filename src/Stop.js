@@ -65,7 +65,7 @@ export default class Stop {
         this.handleErrors(listener, stopPhase.errors);
 
         if (annotations.length > 0){
-            throw Error("invalid file");
+            throw {annotations: listener.annotations};
         }
 
         for (var name in defPhase.globals.definitions){
@@ -94,7 +94,7 @@ export default class Stop {
                 var state = this.states[name];
 
                 if (!state){
-                    throw Error("State " + name + " not found");
+                    throw new StopValidationException("State " + name + " not found");
                 }
 
                 for (var i in symbol.transitions){
@@ -136,7 +136,7 @@ export default class Stop {
                             state.returnState = returnState;
                             state.returnAnnotation = symbol.returnSymbol.annotation;
                         }else{
-                            throw Error("State " + name + " not found");
+                            throw new StopValidationException("State " + name + " not found");
                         }
                     }
                 }
@@ -196,7 +196,7 @@ export default class Stop {
                                 property.providerState = providerState;
                                 property.providerStateMapping = fieldSymbol.dynamicSource.sourceMapping;
                             }else{
-                                throw Error("State " + fieldSymbol.dynamicSource.name + " not found");
+                                throw new StopValidationException("State " + fieldSymbol.dynamicSource.name + " not found");
                             }
                         }
 
